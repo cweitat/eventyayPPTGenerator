@@ -7,10 +7,19 @@
 	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/libs/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/libs/jszip.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/dist/pptxgen.min.js"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> -->
 </head>
 <body>
-	<input type="text" name="roomName" id="roomName">
+	<select id="roomName">
+		<option value="Exhibition">Exhibition</option>
+		<option value="Event Hall 2-1">Event Hall 2-1</option>
+		<option value="Lecture Theatre">Lecture Theatre</option>
+		<option value="Theatre Lounge">Theatre Lounge</option>
+		<option value="Training room 2-1">Training room 2-1</option>
+		<option value="Training room 2-2">Training room 2-2</option>
+		<option value="Training room 9-1">Training room 9-1</option>
+		<option value="Training room 9-2/9-3">Training room 9-2/9-3</option>
+	</select>
+
 	<button id="run">Execute</button>
 	<script>
 
@@ -40,6 +49,13 @@
 			//get start time
 			var starttime = data.sessions[i].start_time;
 			var starttime = parseDate(starttime);
+
+			//get date month to set in file name
+			var eventdate = starttime.getDate();
+			var eventmonth = starttime.getMonth() + 1;
+			var fulldate = eventdate + "-" + eventmonth;
+
+			//get starttime and display nicely
 			var starttime_hour = starttime.getHours();
 			starttime_hour = ("0" + starttime_hour).slice(-2);
 			var starttime_minutes = starttime.getMinutes();
@@ -49,6 +65,7 @@
 			//get end time
 			var endtime = data.sessions[i].end_time;
 			endtime = parseDate(endtime);
+			//get endtime and display nicely
 			var endtime_hour = endtime.getHours();
 			endtime_hour = ("0" + endtime_hour).slice(-2);
 			var endtime_minutes = endtime.getMinutes();
@@ -78,20 +95,20 @@
 				var slide = pptx.addNewSlide();
 				slide.back ='CC0000';
 				slide.color = 'FFFFFF';
-			slide.addImage({ path:'C:/Users/user/Desktop/fossasia.png', x:1, y:1, w:8.0, h:4.0 });
-			slide.addText([
-				{text:title, options:{bold:true, fontSize: 28, align:'c'}},
-				{text:displaytime, options:{bold:true, fontSize: 28, align:'c'}},
-				{text:'Speaker', options:{fontSize: 20, align:'c', underline:true}},
-				{text:speakersname, options:{fontSize: 20, align:'c'}},
-				{text:'Track', options:{fontSize: 20, align:'c', underline:true}},
-				{text:track, options:{fontSize: 20, align:'c'}},
-				], {y:'50%', w:10});
-			var filename = displaytime + '-' + title;
-			pptx.save(filename);
-		}
+				slide.addImage({ path:'C:/Users/user/Desktop/fossasia.png', x:1, y:1, w:8.0, h:4.0 });
+				slide.addText([
+					{text:title, options:{bold:true, fontSize: 28, align:'c'}},
+					{text:displaytime, options:{bold:true, fontSize: 28, align:'c'}},
+					{text:'Speaker', options:{fontSize: 20, align:'c', underline:true}},
+					{text:speakersname, options:{fontSize: 20, align:'c'}},
+					{text:'Track', options:{fontSize: 20, align:'c', underline:true}},
+					{text:track, options:{fontSize: 20, align:'c'}},
+					], {y:'50%', w:10});
+				var filename = fulldate + ".(Time)" + displaytime + '-' + title;
+				pptx.save(filename);
+			}
 
-	}});
+		}});
 			
 		});
 
