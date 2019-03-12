@@ -1,0 +1,101 @@
+<html>
+<head>
+	<!-- Bundle: Easiest to use, supports all browsers -->
+	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/dist/pptxgen.bundle.js"></script>
+
+	<!-- Individual files: Add only what's needed to avoid clobbering loaded libraries -->
+	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/libs/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/libs/jszip.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@2.5.0/dist/pptxgen.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> -->
+</head>
+<body>
+	<input type="text" name="roomName" id="roomName">
+	<button id="run">Execute</button>
+	<script>
+
+		$('#run').click(function(){
+			$.getJSON( "https://eventyay.com/api/v1/events/598?include=sessions", function( data ) {
+				var sessionslength = data.sessions.length;
+				var i;
+				for (i=0; i< sessionslength; i++){
+					
+			//get title
+			var title = data.sessions[i].title;
+			//get track
+			var track = data.sessions[i].track.name;
+			// get speaker
+			var speakersqty = data.sessions[i].speakers.length;
+			var speakersname;
+			if (speakersqty == 1){
+				speakersname = data.sessions[i].speakers[0].name;
+			} else {
+				speakersname = "";
+			}
+
+			function parseDate(str_date) {
+				return new Date(Date.parse(str_date));
+			}
+
+			//get start time
+			var starttime = data.sessions[i].start_time;
+			var starttime = parseDate(starttime);
+			var starttime_hour = starttime.getHours();
+			starttime_hour = ("0" + starttime_hour).slice(-2);
+			var starttime_minutes = starttime.getMinutes();
+			starttime_minutes = ("0" + starttime_minutes).slice(-2);
+			starttime = starttime_hour + ":" + starttime_minutes;
+
+			//get end time
+			var endtime = data.sessions[i].end_time;
+			endtime = parseDate(endtime);
+			var endtime_hour = endtime.getHours();
+			endtime_hour = ("0" + endtime_hour).slice(-2);
+			var endtime_minutes = endtime.getMinutes();
+			endtime_minutes = ("0" + endtime_minutes).slice(-2);
+			endtime = endtime_hour + ":" + endtime_minutes;
+
+			var displaytime;
+			if (starttime != "" || endtime != ""){
+				displaytime = starttime + ' - ' + endtime;
+			} else {
+				displaytime = "";
+			}
+
+			// get location and save by location
+			var location;
+			if (data.sessions[i].microlocation != null){
+				location = data.sessions[i].microlocation.name;
+			};
+
+			var inputroom = $("#roomName").val();
+			console.log(inputroom);
+			if (location == inputroom){
+				var pptx = null;
+
+				pptx = new PptxGenJS();
+				pptx.setLayout('LAYOUT_16x9');
+				var slide = pptx.addNewSlide();
+				slide.back ='CC0000';
+				slide.color = 'FFFFFF';
+			slide.addImage({ path:'C:/Users/user/Desktop/fossasia.png', x:1, y:1, w:8.0, h:4.0 });
+			slide.addText([
+				{text:title, options:{bold:true, fontSize: 28, align:'c'}},
+				{text:displaytime, options:{bold:true, fontSize: 28, align:'c'}},
+				{text:'Speaker', options:{fontSize: 20, align:'c', underline:true}},
+				{text:speakersname, options:{fontSize: 20, align:'c'}},
+				{text:'Track', options:{fontSize: 20, align:'c', underline:true}},
+				{text:track, options:{fontSize: 20, align:'c'}},
+				], {y:'50%', w:10});
+			var filename = displaytime + '-' + title;
+			pptx.save(filename);
+		}
+
+	}});
+			
+		});
+
+
+	</script>
+</body>
+</html>
