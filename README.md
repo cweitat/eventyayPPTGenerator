@@ -1,11 +1,11 @@
-# Eventyay Slides Generator
+# Eventyay Door Screen Slides Generator
 ### **NOTE**
 **Check that all slides are there after generating. There's cases where some sessions are skipped. If a fix is found, please make a PR.**
 
 ### Software/Services used
     
-   - [PptxGenJS]( https://github.com/gitbrent/PptxGenJS) {:target="_blank"}
-   - [Eventyay](https://eventyay.com){:target="_blank"} API
+   - [PptxGenJS]( https://github.com/gitbrent/PptxGenJS)
+   - [Eventyay](https://eventyay.com) API
 
 ### Setup Instructions
 	
@@ -31,7 +31,7 @@ Example:
 
 **Screenshot**
 
-
+![screenshot sample](https://github.com/cweitat/eventyayPPTGenerator/raw/master/screenshot.PNG)
 
 ---
 #### **Credits**
